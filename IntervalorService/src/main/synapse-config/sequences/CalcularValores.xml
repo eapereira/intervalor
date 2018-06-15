@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="CarcularValores" onError="fault" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="sequence" value="Sequence - execute CarcularValores"/>
+    </log>
+    <log level="custom">
+        <property name="sequence" value="Sequence - Payload CarcularValores"/>
+    </log>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:cop="http://coparticipacao.com/calcularcoparticipacao" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <cop:CalcularCoparticipacao>
+                        <cop:IDPROCESSO>$1</cop:IDPROCESSO>
+                        <cop:ANOMES>$2</cop:ANOMES>
+                    </cop:CalcularCoparticipacao>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:IdProcesso" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <arg evaluator="xml" expression="$ctx:YearMonth" xmlns:ns="http://org.apache.synapse/xsd"/>
+        </args>
+    </payloadFactory>
+    <call blocking="true">
+        <endpoint key="CalcularDataService"/>
+    </call>
+    <log level="custom">
+        <property name="sequence" value="Sequence - After CALL CarcularValores"/>
+    </log>
+    <property expression="fn:number(count(//*[local-name()='RESULTADO']))" name="resultado" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <filter xmlns:cop="http://coparticipacao.com/calcularcoparticipacao" xmlns:ns="http://org.apache.synapse/xsd" xpath="fn:number(syn:get-property('resultado')) = fn:number(1)">
+        <then>
+            <log level="custom">
+                <property name="sequence" value="Valores atualizados"/>
+            </log>
+        </then>
+        <else>
+            <log level="custom">
+                <property name="sequence" value="Valores nao atualizados"/>
+            </log>
+            <drop/>
+        </else>
+    </filter>
+</sequence>

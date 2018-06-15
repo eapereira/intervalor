@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ProcessarIntervalor" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="sequence" value="Sequence - execute ProcessarIntervalor"/>
+        <property name="sequence" value="before-Iterate"/>
+    </log>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+					$1
+				</soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:dados" xmlns:ns="http://org.apache.synapse/xsd"/>
+        </args>
+    </payloadFactory>
+    <iterate attachPath="//dados" continueParent="true" expression="//dados/dado" preservePayload="true" sequential="true" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd" xmlns:sec="http://secservice.samples.esb.wso2.org" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <target>
+            <sequence>
+                <property expression="//dado/datanascimentodependente" name="dtDepOrig" scope="default" type="STRING"/>
+                <property expression="fn:concat(fn:substring($ctx:dtDepOrig,7,4),'-',fn:substring($ctx:dtDepOrig,4,2),'-',fn:substring($ctx:dtDepOrig,1,2),'T00:00:00')" name="dtDepTransf" scope="default" type="STRING"/>
+                <property expression="fn:number(//dado/coparticipacao) div 100" name="valorTransf" scope="default" type="STRING"/>
+                <payloadFactory media-type="xml">
+                    <format>
+                        <soapenv:Envelope xmlns:cop="http://coparticipacao.com/execucao" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                            <soapenv:Header/>
+                            <soapenv:Body>
+                                <cop:InserirExecucao>
+                                    <cop:IdArquivo>$1</cop:IdArquivo>
+                                    <cop:MesReferencia>$2</cop:MesReferencia>
+                                    <cop:TipoRegistro>$3</cop:TipoRegistro>
+                                    <cop:Chave>$4</cop:Chave>
+                                    <cop:Matricula>$5</cop:Matricula>
+                                    <cop:PrefixoEmpresa>$6</cop:PrefixoEmpresa>
+                                    <cop:NomeTitular>$7</cop:NomeTitular>
+                                    <cop:CPFTitular>$8</cop:CPFTitular>
+                                    <cop:NomeDependente>$9</cop:NomeDependente>
+                                    <cop:DataNascimentoDepenente>$10</cop:DataNascimentoDepenente>
+                                    <cop:CPFDependente>$11</cop:CPFDependente>
+                                    <cop:UnidadeEmpresa>$12</cop:UnidadeEmpresa>
+                                    <cop:ValorPrincipal>$13</cop:ValorPrincipal>
+                                    <cop:CodigoEmpresa>$14</cop:CodigoEmpresa>
+                                </cop:InserirExecucao>
+                            </soapenv:Body>
+                        </soapenv:Envelope>
+                    </format>
+                    <args>
+                        <arg evaluator="xml" expression="$ctx:IdArquivo"/>
+                        <arg evaluator="xml" expression="$ctx:YearMonth"/>
+                        <arg value="A"/>
+                        <arg value=""/>
+                        <arg evaluator="xml" expression="//dado/matricula"/>
+                        <arg evaluator="xml" expression="//dado/prefixoempresa"/>
+                        <arg evaluator="xml" expression="//dado/titular"/>
+                        <arg value=""/>
+                        <arg evaluator="xml" expression="//dado/beneficiario"/>
+                        <arg evaluator="xml" expression="$ctx:dtDepTransf"/>
+                        <arg evaluator="xml" expression="//dado/cpfdependente"/>
+                        <arg evaluator="xml" expression="//dado/unidade"/>
+                        <arg evaluator="xml" expression="$ctx:valorTransf"/>
+                        <arg evaluator="xml" expression="//dado/codigoempresa"/>
+                    </args>
+                </payloadFactory>
+                <call blocking="true">
+                    <endpoint key="ExecucaoDataService"/>
+                </call>
+            </sequence>
+        </target>
+    </iterate>
+    <log level="full"/>
+    <log level="custom">
+        <property name="sequence" value="after-iterate"/>
+    </log>
+</sequence>

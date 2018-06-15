@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="fileWriteSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="full">
+        <property name="sequence" value="before-smooks"/>
+    </log>
+    <smooks config-key="smooks">
+        <input type="text"/>
+        <output type="xml"/>
+    </smooks>
+    <log level="full">
+        <property name="sequence" value="after-smooks"/>
+    </log>
+    <iterate expression="//people/person" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd" xmlns:sec="http://secservice.samples.esb.wso2.org">
+        <target>
+            <sequence>
+                <log level="custom">
+                    <property expression="//person/name/text()" name="name"/>
+                    <property expression="//person/surname/text()" name="surname"/>
+                    <property expression="//person/phone/text()" name="phone"/>
+                </log>
+            </sequence>
+        </target>
+    </iterate>
+</sequence>

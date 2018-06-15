@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="smooks/intervalorsmooks-config" xmlns="http://ws.apache.org/ns/synapse">
+    <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" xmlns:fl="http://www.milyn.org/xsd/smooks/fixed-length-1.3.xsd">
+        <fl:reader fields="tiporegistro[2],prefixoempresa[1],codigoempresa[4],matricula[8],diferenciadormatricula[2],numerodependente[1],beneficiario[32]?trim,$ignore$[7],cpfdependente[11],mesano[7],sinal[1],coparticipacao[15],unidade[5],datanascimentodependente[10],codigoempresa2[4],matricula2[8],diferenciadormatricula2[2],digitodependente[1],titular[32]?trim,$ignore$[9]" recordElementName="dado" rootElementName="dados" skipLines="1"/>
+    </smooks-resource-list>
+</localEntry>

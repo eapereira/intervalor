@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="LerArquivoIntervalor" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="sequence" value="Sequence - execute LerArquivoIntervalor"/>
+        <property name="sequence" value="before-smooks"/>
+    </log>
+    <smooks config-key="smooks/intervalorsmooks-config">
+        <input type="text"/>
+        <output type="xml"/>
+    </smooks>
+    <log level="custom">
+        <property name="sequence" value="after-smooks"/>
+    </log>
+    <property expression="//dados" name="dados" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property expression="fn:number(count(//*[local-name()='dado']))" name="itens" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <filter xmlns:ns="http://org.apache.synapse/xsd" xpath="fn:number(syn:get-property('itens')) > fn:number(0)">
+        <then>
+            <log level="custom">
+                <property expression="fn:concat('Leitura realizada com sucesso para ', syn:get-property('itens'), ' itens')" name="sequence"/>
+            </log>
+        </then>
+        <else>
+            <log level="custom">
+                <property name="sequence" value="Falha na leitura do arquivo"/>
+            </log>
+            <drop/>
+        </else>
+    </filter>
+</sequence>

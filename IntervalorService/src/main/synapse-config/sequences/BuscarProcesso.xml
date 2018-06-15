@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="BuscarProcesso" onError="fault" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="sequence" value="Sequence - execute BuscarProcesso"/>
+    </log>
+    <log level="custom">
+        <property name="sequence" value="Sequence - Payload BuscarProcesso"/>
+    </log>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:cop="http://coparticipacao.com/processo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <cop:BuscarProcesso>
+                        <cop:IdProcesso>$1</cop:IdProcesso>
+                    </cop:BuscarProcesso>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="syn:get-property('IdProcesso')" xmlns:ns="http://org.apache.synapse/xsd"/>
+        </args>
+    </payloadFactory>
+    <call blocking="true">
+        <endpoint key="ProcessoDataService"/>
+    </call>
+    <log level="custom">
+        <property name="sequence" value="Sequence - After CALL BuscarProcesso"/>
+    </log>
+    <property expression="fn:number(count(//*[local-name()='processo']))" name="itens" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <filter xmlns:cop="http://coparticipacao.com/processo" xmlns:ns="http://org.apache.synapse/xsd" xpath="fn:number(syn:get-property('itens')) = fn:number(1)">
+        <then>
+            <property expression="//cop:processo[1]/cop:IdRegra/text()" name="IdRegra" scope="default" type="STRING"/>
+            <property expression="//cop:processo[1]/cop:Valor/text()" name="ValorRegra" scope="default" type="STRING"/>
+            <log level="custom">
+                <property name="sequence" value="Processo encontrado"/>
+                <property expression="fn:concat('IdRegra: ', syn:get-property('IdRegra'))" name="sequence"/>
+                <property expression="fn:concat('ValorRegra: ', syn:get-property('ValorRegra'))" name="sequence"/>
+            </log>
+        </then>
+        <else>
+            <log level="custom">
+                <property name="sequence" value="Processo nao encontrado"/>
+            </log>
+            <drop/>
+        </else>
+    </filter>
+</sequence>

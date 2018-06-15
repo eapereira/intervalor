@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="TratarVariaveisArquivo" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property expression="fn:tokenize(syn:get-property('FullFileName'), '\.')[1]" name="FileName" scope="default" type="STRING" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property expression="fn:substring(fn:tokenize(syn:get-property('FullFileName'), syn:get-property('SeparatorChar'))[2], 1, 6)" name="YearMonth" scope="default" type="STRING" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property expression="fn:substring-before(fn:replace(syn:get-property('FullFilePath'), '/', '\\\\'), syn:get-property('FullFileName'))" name="FilePath" scope="default" type="STRING" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <log level="custom">
+        <property expression="syn:get-property('FullFileName')" name="show-fullname" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="syn:get-property('FileName')" name="show-name" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="syn:get-property('YearMonth')" name="show-yearmonth" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="syn:get-property('FilePath')" name="show-path" xmlns:ns="http://org.apache.synapse/xsd"/>
+    </log>
+</sequence>

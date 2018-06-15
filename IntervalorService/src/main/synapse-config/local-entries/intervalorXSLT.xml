@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="intervalorXSLT" xmlns="http://ws.apache.org/ns/synapse">
+    <xsl:stylesheet exclude-result-prefixes="ns fn" version="2.0" xmlns:cop="http://coparticipacao.com/execucao" xmlns:fn="http://www.w3.org/2005/02/xpath-functions" xmlns:ns="http://org.apache.synapse/xsd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:param name="nomeArquivo"/>
+        <xsl:param name="nomePlanilha"/>
+        <xsl:output indent="no" method="xml" omit-xml-declaration="no"/>
+        <xsl:template match="//cop:execucaoCollection/cop:execucao">
+            <body>
+                <planilhas xmlns="">
+                    <name>
+                        <xsl:value-of select="$nomeArquivo"/>
+                    </name>
+                    <planilha>
+                        <name>
+                            <xsl:value-of select="$nomePlanilha"/>
+                        </name>
+                        <header>
+                            <column1>Matricula</column1>
+                            <column2>Codigo Empresa</column2>
+                            <column3>Prefixo Empresa</column3>
+                            <column4>Nome Titular</column4>
+                            <column5>Nome Dependente</column5>
+                            <column6>Data Nascimento</column6>
+                            <column7>CPF Dependente</column7>
+                            <column8>Unidade</column8>
+                            <column9>Valor Copart</column9>
+                        </header>
+                        <body>
+                            <xsl:for-each select="//cop:execucaoCollection/cop:execucao">
+                                <info>
+                                    <column1>
+                                        <xsl:value-of select="cop:Matricula"/>
+                                    </column1>
+                                    <column2>
+                                        <xsl:value-of select="cop:CodigoEmpresa"/>
+                                    </column2>
+                                    <column3>
+                                        <xsl:value-of select="cop:PrefixoEmpresa"/>
+                                    </column3>
+                                    <column4>
+                                        <xsl:value-of select="cop:NomeTitular"/>
+                                    </column4>
+                                    <column5>
+                                        <xsl:value-of select="cop:NomeDependente"/>
+                                    </column5>
+                                    <column6>
+                                        <xsl:value-of select="format-date(cop:DataNascimentoDepenente, '[D01]/[M01]/[Y0001]')"/>
+                                    </column6>
+                                    <column7>
+                                        <xsl:value-of select="cop:CPFDependente"/>
+                                    </column7>
+                                    <column8>
+                                        <xsl:value-of select="cop:UnidadeEmpresa"/>
+                                    </column8>
+                                    <column9>
+                                        <xsl:value-of select="translate(cop:ValorPrincipal, '.', ',')"/>
+                                    </column9>
+                                </info>
+                            </xsl:for-each>
+                        </body>
+                    </planilha>
+                </planilhas>
+            </body>
+        </xsl:template>
+    </xsl:stylesheet>
+</localEntry>

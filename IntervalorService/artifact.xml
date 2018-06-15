@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="ExportarArquivo" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/ExportarArquivo.xml</file>
+    </artifact>
+    <artifact name="intervalorsmooks-config" groupId="br.com.spread.qualicorp.coparticipacao.local-entry" version="1.0.0" type="synapse/local-entry" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/local-entries/intervalorsmooks-config.xml</file>
+    </artifact>
+    <artifact name="LerArquivoIntervalor" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/LerArquivoIntervalor.xml</file>
+    </artifact>
+    <artifact name="fileWriteSequence" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/fileWriteSequence.xml</file>
+    </artifact>
+    <artifact name="ExportarArquivoIntervalor" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/ExportarArquivoIntervalor.xml</file>
+    </artifact>
+    <artifact name="DeletarArquivoAnoMes" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DeletarArquivoAnoMes.xml</file>
+    </artifact>
+    <artifact name="BuscarArquivo" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/BuscarArquivo.xml</file>
+    </artifact>
+    <artifact name="BuscarProcesso" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/BuscarProcesso.xml</file>
+    </artifact>
+    <artifact name="CalcularValores" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/CalcularValores.xml</file>
+    </artifact>
+    <artifact name="IntervalorProxy" groupId="br.com.spread.qualicorp.coparticipacao.proxy-service" version="1.0.0" type="synapse/proxy-service" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/proxy-services/IntervalorProxy.xml</file>
+    </artifact>
+    <artifact name="TratarVariaveisArquivo" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/TratarVariaveisArquivo.xml</file>
+    </artifact>
+    <artifact name="ProcessarIntervalor" groupId="br.com.spread.qualicorp.coparticipacao.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/ProcessarIntervalor.xml</file>
+    </artifact>
+    <artifact name="intervalorXSLT" groupId="br.com.spread.qualicorp.coparticipacao.local-entry" version="1.0.0" type="synapse/local-entry" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/local-entries/intervalorXSLT.xml</file>
+    </artifact>
+</artifacts>

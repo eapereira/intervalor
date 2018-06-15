@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="DeletarArquivoAnoMes" onError="fault" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="sequence" value="Sequence - execute DeletarArquivoAnoMes"/>
+    </log>
+    <log level="custom">
+        <property name="sequence" value="Sequence - Payload DeletarArquivoAnoMes"/>
+    </log>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:cop="http://coparticipacao.com/execucaoservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <cop:DeletarExecucaoAnoMes>
+                        <cop:IDARQUIVO>$1</cop:IDARQUIVO>
+                        <cop:ANOMES>$2</cop:ANOMES>
+                    </cop:DeletarExecucaoAnoMes>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:IdArquivo" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <arg evaluator="xml" expression="$ctx:YearMonth" xmlns:ns="http://org.apache.synapse/xsd"/>
+        </args>
+    </payloadFactory>
+    <call blocking="true">
+        <endpoint key="ExecucaoDataService"/>
+    </call>
+    <log level="custom">
+        <property name="sequence" value="Sequence - After CALL DeletarArquivoAnoMes"/>
+    </log>
+</sequence>

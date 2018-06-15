@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ExportarArquivoIntervalor" onError="fault" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="sequence" value="ExportarArquivoIntervalor::Sequence - execute ExportarArquivoIntervalor"/>
+    </log>
+    <log level="custom">
+        <property name="sequence" value="ExportarArquivoIntervalor::Sequence - Payload ExportarArquivoIntervalor"/>
+    </log>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:cop="http://coparticipacao.com/execucaoservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <cop:BuscarExecucaoAnoMes>
+                        <cop:IDPROCESSO>$1</cop:IDPROCESSO>
+                        <cop:ANOMES>$2</cop:ANOMES>
+                    </cop:BuscarExecucaoAnoMes>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:IdProcesso" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <arg evaluator="xml" expression="$ctx:YearMonth" xmlns:ns="http://org.apache.synapse/xsd"/>
+        </args>
+    </payloadFactory>
+    <call blocking="true">
+        <endpoint key="ExecucaoDataService"/>
+    </call>
+    <log level="custom">
+        <property name="message" value="ExportarArquivoIntervalor::Preparando para fazer a convercao do XML:"/>
+    </log>
+    <log level="full"/>
+    <property expression="(//*[local-name()='UnidadeEmpresa'])[1]" name="UnidadeEmpresa" scope="default" type="STRING" xmlns:cop="http://coparticipacao.com/execucao" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property expression="fn:concat('Intervalor-SAS(Saude)_Coparticipacao_(', $ctx:YearMonth, ')_', $ctx:UnidadeEmpresa)" name="NomeArquivoXLS" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <xslt key="intervalorXSLT" source="$body" xmlns:cop="http://coparticipacao.com/execucao" xmlns:ns="http://org.apache.synapse/xsd">
+        <property expression="$ctx:NomeArquivoXLS" name="nomeArquivo"/>
+        <property expression="$ctx:UnidadeEmpresa" name="nomePlanilha"/>
+    </xslt>
+    <log level="custom">
+        <property name="message" value="ExportarArquivoIntervalor::Depois de transformar o XML:"/>
+    </log>
+    <log level="full"/>
+    <sequence key="ExportarArquivo"/>
+</sequence>

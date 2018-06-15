@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="BuscarArquivo" onError="fault" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="sequence" value="Sequence - execute BuscarArquivo"/>
+    </log>
+    <log level="custom">
+        <property name="sequence" value="Sequence - Payload BuscarArquivo"/>
+    </log>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:cop="http://coparticipacao.com/arquivo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <cop:BuscarArquivo>
+                        <cop:NomeArquivo>$1</cop:NomeArquivo>
+                        <cop:PastaInicial>$2</cop:PastaInicial>
+                    </cop:BuscarArquivo>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:FileName" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <arg evaluator="xml" expression="$ctx:FilePath" xmlns:ns="http://org.apache.synapse/xsd"/>
+        </args>
+    </payloadFactory>
+    <log level="full"/>
+    <call blocking="true">
+        <endpoint key="ArquivoDataService"/>
+    </call>
+    <log level="custom">
+        <property name="sequence" value="Sequence - After CALL BuscarArquivo"/>
+    </log>
+    <property expression="fn:number(count(//*[local-name()='arquivo']))" name="itens" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <log level="custom">
+        <property expression="fn:concat('Total de registros: ', syn:get-property('itens'))" name="message" xmlns:ns="http://org.apache.synapse/xsd"/>
+    </log>
+    <filter xmlns:cop="http://coparticipacao.com/arquivo" xmlns:ns="http://org.apache.synapse/xsd" xpath="fn:number(syn:get-property('itens')) = fn:number(1)">
+        <then>
+            <property expression="//cop:arquivo[1]/cop:IdArquivo/text()" name="IdArquivo" scope="default" type="STRING"/>
+            <property expression="//cop:arquivo[1]/cop:IdArquivo/text()" name="IdProcesso" scope="default" type="STRING"/>
+            <log level="custom">
+                <property name="sequence" value="Arquivo encontrado"/>
+                <property expression="fn:concat('IdArquivo: ', syn:get-property('IdArquivo'))" name="sequence"/>
+                <property expression="fn:concat('IdProcesso: ', syn:get-property('IdProcesso'))" name="sequence"/>
+            </log>
+            <sequence key="BuscarProcesso"/>
+        </then>
+        <else>
+            <log level="custom">
+                <property name="sequence" value="Arquivo nao encontrado"/>
+            </log>
+            <drop/>
+        </else>
+    </filter>
+</sequence>

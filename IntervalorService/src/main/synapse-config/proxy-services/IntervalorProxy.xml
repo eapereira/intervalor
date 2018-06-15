@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="IntervalorProxy" startOnLoad="true" transports="vfs" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <log level="custom">
+                <property name="sequence" value="inSequence - execute IntervalorProxy"/>
+            </log>
+            <property expression="$trp:FILE_NAME" name="FullFileName" scope="default" type="STRING"/>
+            <property expression="$trp:FILE_PATH" name="FullFilePath" scope="default" type="STRING"/>
+            <property name="SeparatorChar" scope="default" type="STRING" value="\."/>
+            <sequence key="TratarVariaveisArquivo"/>
+            <sequence key="LerArquivoIntervalor"/>
+            <sequence key="BuscarArquivo"/>
+            <sequence key="DeletarArquivoAnoMes"/>
+            <sequence key="ProcessarIntervalor"/>
+            <sequence key="CarcularValores"/>
+            <sequence key="ExportarArquivoIntervalor"/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+    <parameter name="transport.vfs.Streaming">true</parameter>
+    <parameter name="transport.PollInterval">5</parameter>
+    <parameter name="transport.vfs.FileURI">file://C:/desenv/work/coparticipacao/sulamerica/intervalor/input</parameter>
+    <parameter name="transport.vfs.ContentType">text/plain</parameter>
+    <parameter name="transport.vfs.ActionAfterProcess">MOVE</parameter>
+    <parameter name="transport.vfs.MoveAfterFailure">file://C:/desenv/work/coparticipacao/sulamerica/intervalor/failure</parameter>
+    <parameter name="transport.vfs.ActionAfterFailure">MOVE</parameter>
+    <parameter name="transport.vfs.FileNamePattern">.*.txt</parameter>
+    <parameter name="transport.vfs.MoveAfterProcess">file://C:/desenv/work/coparticipacao/sulamerica/intervalor/output</parameter>
+</proxy>

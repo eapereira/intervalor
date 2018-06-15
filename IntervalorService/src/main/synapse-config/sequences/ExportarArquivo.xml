@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ExportarArquivo" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property expression="//planilhas" name="xmlToTransformExcel" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property name="urlDestiny" scope="default" type="STRING" value="c:/desenv/work/coparticipacao/sulamerica/intervalor/output-report/"/>
+    <log level="custom">
+        <property expression="get-property('xmlToTransformExcel')" name="xml" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="get-property('urlDestiny')" name="url" xmlns:ns="http://org.apache.synapse/xsd"/>
+    </log>
+    <class name="br.com.spread.qualicorp.coparticipacao.intervalor.mediator.XmlToExcelMediator">
+        <property name="urlDestiny" value="c:/desenv/work/coparticipacao/sulamerica/intervalor/output-report/"/>
+    </class>
+</sequence>
