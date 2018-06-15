@@ -27,17 +27,7 @@
     <br.com.spread.qualicorp.coparticipacao.sequence_._ExportarArquivoIntervalor>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._ExportarArquivoIntervalor>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>br.com.spread.qualicorp.coparticipacao.intervalor.mediator</groupId>
-      <artifactId>XmlToExcelMediator</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.example.XmlToExcelConverterLib</groupId>
-      <artifactId>XmlToExcelConverterLib</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
+            <dependency>
       <groupId>br.com.spread.qualicorp.coparticipacao.local-entry</groupId>
       <artifactId>intervalorXSLT</artifactId>
       <version>1.0.0</version>
