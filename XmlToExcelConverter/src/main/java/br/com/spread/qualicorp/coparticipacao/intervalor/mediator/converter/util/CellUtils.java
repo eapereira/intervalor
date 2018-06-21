@@ -10,10 +10,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * 
@@ -32,46 +32,59 @@ public class CellUtils {
 
 	private static final int CPF_LENGTH = 11;
 
-	private HSSFWorkbook workbook;
+	// private Workbook workbook;
 
-	public CellUtils(HSSFWorkbook workbook) {
-		this.workbook = workbook;
-	}
+	private CellStyle doubleCellStyle;
 
-	public void defineCellValue(HSSFCell cell, String value) {
-		CellStyle cellStyle;
+	private CellStyle dateCellStyle;
+
+	private CellStyle longCellStyle;
+
+	private CellStyle cpfCellStyle;
+
+	public CellUtils(Workbook workbook) {
+		// this.workbook = workbook;
+
 		DataFormat dataFormat;
 
+		dataFormat = workbook.createDataFormat();
+		dateCellStyle = workbook.createCellStyle();
+		dateCellStyle.setDataFormat(dataFormat.getFormat("dd/MM/yyyy"));
+
+		dataFormat = workbook.createDataFormat();
+		doubleCellStyle = workbook.createCellStyle();
+		doubleCellStyle.setDataFormat(dataFormat.getFormat("#0.00"));
+
+		dataFormat = workbook.createDataFormat();
+		longCellStyle = workbook.createCellStyle();
+		longCellStyle.setDataFormat(dataFormat.getFormat("#0"));
+
+		dataFormat = workbook.createDataFormat();
+		cpfCellStyle = workbook.createCellStyle();
+		cpfCellStyle.setDataFormat(dataFormat.getFormat("00000000000"));
+	}
+
+	public void defineCellValue(Cell cell, String value) {
 		try {
 			if (isDate(value)) {
 				LOGGER.info("Discovering proper type for [{}] - date:", value);
 
-				cellStyle = workbook.createCellStyle();
-				dataFormat = workbook.createDataFormat();
-				cellStyle.setDataFormat(dataFormat.getFormat("dd/MM/yyyy"));
-				cell.setCellStyle(cellStyle);
+				cell.setCellStyle(dateCellStyle);
 				cell.setCellValue(stringToDate(value));
 			} else if (isDouble(value)) {
 				LOGGER.info("Discovering proper type for [{}] - double:", value);
 
-				cellStyle = workbook.createCellStyle();
-				dataFormat = workbook.createDataFormat();
-				cellStyle.setDataFormat(dataFormat.getFormat("#0.00"));
-				cell.setCellStyle(cellStyle);
+				cell.setCellStyle(doubleCellStyle);
 				cell.setCellValue(stringToDouble(value));
 			} else if (isInteger(value)) {
-				cellStyle = workbook.createCellStyle();
-				dataFormat = workbook.createDataFormat();
-
 				if (isCpf(value)) {
 					LOGGER.info("Discovering proper type for [{}] - CPF:", value);
-					cellStyle.setDataFormat(dataFormat.getFormat("00000000000"));
+					cell.setCellStyle(cpfCellStyle);
 				} else {
 					LOGGER.info("Discovering proper type for [{}] - integer:", value);
-					cellStyle.setDataFormat(dataFormat.getFormat("#0"));
+					cell.setCellStyle(longCellStyle);
 				}
 
-				cell.setCellStyle(cellStyle);
 				cell.setCellValue(stringToLong(value));
 			} else {
 				LOGGER.info("Discovering proper type for [{}] - string:", value);

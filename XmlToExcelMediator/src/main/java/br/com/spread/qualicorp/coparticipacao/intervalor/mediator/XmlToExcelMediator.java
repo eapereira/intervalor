@@ -15,19 +15,28 @@ public class XmlToExcelMediator extends AbstractMediator {
 	private String urlDestiny;
 
 	public boolean mediate(MessageContext messageContext) {
-		LOGGER.info("<<< REALIZANDO A CHAMADO DA CLASSE XmlToExcelConverterQualiti >>>");
-		
+		boolean result = false;
+		LOGGER.info("<<< REALIZANDO A CHAMADO DA CLASSE XmlToExcelConverter >>>");
+
 		XmlToExcelConverter xmlToExcell = new XmlToExcelConverter();
 		SOAPBody body = messageContext.getEnvelope().getBody();
 		String bodyString = body.toString();
 		String xml = bodyString.substring(bodyString.indexOf("<planilhas>"), bodyString.indexOf("</soapenv:Body>"));
-		
+
 		if ((xml.isEmpty()) || (xml.length() == 0)) {
-			LOGGER.info("Parametros n�o informado");
+			LOGGER.info("Parametros nao informados");
 			return false;
 		}
-		xmlToExcell.getAndReadXml(xml, this.urlDestiny);
-		return true;
+
+		result = xmlToExcell.getAndReadXml(xml, this.urlDestiny);
+
+		if (result) {
+			LOGGER.info("Leitura efetuada com sucesso:");
+		} else {
+			LOGGER.info("Existem erros durante o processamento:");
+		}
+		
+		return result;
 	}
 
 	public String getUrlDestiny() {

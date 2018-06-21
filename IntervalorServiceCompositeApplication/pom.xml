@@ -9,9 +9,9 @@
   <name>IntervalorServiceCompositeApplication</name>
   <description>IntervalorServiceCompositeApplication</description>
   <properties>
+    <br.com.spread.qualicorp.coparticipacao.intervalor.mediator_._XmlToExcelMediator>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.intervalor.mediator_._XmlToExcelMediator>
     <br.com.spread.qualicorp.coparticipacao.local-entry_._intervalorsmooks-config>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.local-entry_._intervalorsmooks-config>
     <br.com.spread.qualicorp.coparticipacao.local-entry_._intervalorXSLT>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.local-entry_._intervalorXSLT>
-    <br.com.spread.qualicorp.coparticipacao.intervalor.mediator_._XmlToExcelMediator>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.intervalor.mediator_._XmlToExcelMediator>
     <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
     <br.com.spread.qualicorp.coparticipacao.sequence_._TratarVariaveisArquivo>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._TratarVariaveisArquivo>
     <br.com.spread.qualicorp.coparticipacao.sequence_._LerArquivoIntervalor>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._LerArquivoIntervalor>
@@ -19,15 +19,15 @@
     <br.com.spread.qualicorp.coparticipacao.sequence_._BuscarProcesso>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._BuscarProcesso>
     <br.com.spread.qualicorp.coparticipacao.sequence_._ProcessarIntervalor>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._ProcessarIntervalor>
     <br.com.spread.qualicorp.coparticipacao.sequence_._BuscarArquivo>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._BuscarArquivo>
-    <br.com.spread.qualicorp.coparticipacao.proxy-service_._IntervalorProxy>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.proxy-service_._IntervalorProxy>
     <com.example.XmlToExcelConverterLib_._XmlToExcelConverterLib>capp/ApplicationServer</com.example.XmlToExcelConverterLib_._XmlToExcelConverterLib>
+    <br.com.spread.qualicorp.coparticipacao.proxy-service_._IntervalorProxy>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.proxy-service_._IntervalorProxy>
     <br.com.spread.qualicorp.coparticipacao.sequence_._CalcularValores>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._CalcularValores>
     <br.com.spread.qualicorp.coparticipacao.sequence_._ExportarArquivo>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._ExportarArquivo>
     <br.com.spread.qualicorp.coparticipacao.sequence_._fileWriteSequence>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._fileWriteSequence>
     <br.com.spread.qualicorp.coparticipacao.sequence_._ExportarArquivoIntervalor>capp/EnterpriseServiceBus</br.com.spread.qualicorp.coparticipacao.sequence_._ExportarArquivoIntervalor>
   </properties>
   <dependencies>
-            <dependency>
+    <dependency>
       <groupId>br.com.spread.qualicorp.coparticipacao.local-entry</groupId>
       <artifactId>intervalorXSLT</artifactId>
       <version>1.0.0</version>
@@ -104,6 +104,16 @@
       <artifactId>fileWriteSequence</artifactId>
       <version>1.0.0</version>
       <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>br.com.spread.qualicorp.coparticipacao.intervalor.mediator</groupId>
+      <artifactId>XmlToExcelMediator</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.example.XmlToExcelConverterLib</groupId>
+      <artifactId>XmlToExcelConverterLib</artifactId>
+      <version>1.0.0</version>
     </dependency>
   </dependencies>
   <repositories>

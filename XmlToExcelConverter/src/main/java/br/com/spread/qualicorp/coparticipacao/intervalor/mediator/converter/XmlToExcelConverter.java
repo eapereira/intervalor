@@ -10,16 +10,16 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFPalette;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,11 +33,8 @@ public class XmlToExcelConverter {
 
 	private static final Logger LOGGER = LogManager.getLogger(XmlToExcelConverter.class);
 
-	private HSSFWorkbook workbook;
-	private int rowNum;
-
 	public XmlToExcelConverter() {
-		workbook = new HSSFWorkbook();
+
 	}
 
 	public boolean getAndReadXml(String xml, String urlXlsx) {
@@ -47,6 +44,9 @@ public class XmlToExcelConverter {
 		Document doc;
 		String nameSheet;
 		FileOutputStream fileOut;
+		NodeList planilhas;
+		String spreadsheetName;
+		Workbook workbook;
 
 		try {
 			LOGGER.info("BEGIN");
@@ -56,14 +56,23 @@ public class XmlToExcelConverter {
 			dBuilder = dbFactory.newDocumentBuilder();
 			is = new InputSource(new StringReader(xml));
 			doc = dBuilder.parse(is);
-			nameSheet = createColumns(doc.getElementsByTagName("planilhas"));
 
-			fileOut = new FileOutputStream(urlXlsx + nameSheet + ".xls");
+			planilhas = doc.getElementsByTagName("planilhas");
+
+			nameSheet = createSheetName(planilhas);
+
+			spreadsheetName = String.format("%s%s.xls", urlXlsx, nameSheet);
+
+			LOGGER.info("Writing spreadsheet [{}]:", spreadsheetName);
+			fileOut = new FileOutputStream(spreadsheetName);
+			workbook = new HSSFWorkbook();
+
+			createColumns(planilhas, workbook);
+
 			workbook.write(fileOut);
 			workbook.close();
 			fileOut.close();
 
-			LOGGER.info("Leitura efetuada com sucesso:");
 			LOGGER.info("END");
 			return true;
 		} catch (SAXException e) {
@@ -72,29 +81,38 @@ public class XmlToExcelConverter {
 			LOGGER.error(e.getMessage(), e);
 		} catch (ParserConfigurationException e) {
 			LOGGER.error(e.getMessage(), e);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 
 		return false;
 	}
 
-	private String createColumns(NodeList planilhas) {
+	private String createSheetName(NodeList planilhas) {
 		String nameSheet = "";
-		CellUtils cellUtils=new CellUtils(workbook);
-		
+
 		for (int i = 0; i < planilhas.getLength(); i++) {
 			if (planilhas.item(i).getNodeType() == 1) {
 				Element el = (Element) planilhas.item(i);
 				nameSheet = el.getElementsByTagName("name").item(0).getTextContent();
 			}
 		}
-		HSSFCellStyle styleHeader = workbook.createCellStyle();
-		HSSFCellStyle styleBody = workbook.createCellStyle();
-		HSSFCellStyle styleBodyLineLast = workbook.createCellStyle();
-		HSSFFont fontHeader = workbook.createFont();
-		HSSFFont fontBody = workbook.createFont();
-		HSSFSheet sheet = workbook.createSheet();
+
+		return nameSheet;
+	}
+
+	private void createColumns(NodeList planilhas, Workbook workbook) {
+		CellUtils cellUtils = new CellUtils(workbook);
+		int rowNum = 1;
+
+		CellStyle styleHeader = workbook.createCellStyle();
+		CellStyle styleBody = workbook.createCellStyle();
+		CellStyle styleBodyLineLast = workbook.createCellStyle();
+		Font fontHeader = workbook.createFont();
+		Font fontBody = workbook.createFont();
+		Sheet sheet = workbook.createSheet();
 		sheet = workbook.getSheetAt(0);
-		HSSFRow row = sheet.createRow(0);
+		Row row = sheet.createRow(0);
 
 		fontHeader.setBold(true);
 		fontBody.setFontName("Calibri");
@@ -103,9 +121,7 @@ public class XmlToExcelConverter {
 		fontBody.setFontHeightInPoints((short) 11);
 		styleHeader.setFont(fontHeader);
 		styleBody.setFont(fontBody);
-		HSSFPalette palette = workbook.getCustomPalette();
-		HSSFColor myColor = palette.findSimilarColor(192, 192, 192);
-		styleHeader.setFillForegroundColor(myColor.getIndex());
+		styleHeader.setFillForegroundColor(IndexedColors.GREY_40_PERCENT.getIndex());
 
 		styleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		styleHeader.setBorderRight(BorderStyle.MEDIUM_DASH_DOT_DOT);
@@ -116,7 +132,6 @@ public class XmlToExcelConverter {
 		styleBodyLineLast.setBorderRight(BorderStyle.THIN);
 		styleBodyLineLast.setBorderBottom(BorderStyle.MEDIUM);
 
-		rowNum = 1;
 		for (int i = 0; i < planilhas.getLength(); i++) {
 			Node node = planilhas.item(i);
 			if (node.getNodeType() == 1) {
@@ -135,7 +150,7 @@ public class XmlToExcelConverter {
 							if (nHedear.item(r).getNodeType() == 1) {
 								Element el = (Element) nHedear.item(r);
 								for (int k = 0; k < el.getChildNodes().getLength(); k++) {
-									HSSFCell cell = row.createCell(k);
+									Cell cell = row.createCell(k);
 									cell.setCellValue(el.getElementsByTagName("column" + (k + 1)).item(0)
 											.getTextContent().toUpperCase());
 									cell.setCellStyle(styleHeader);
@@ -158,7 +173,7 @@ public class XmlToExcelConverter {
 
 									for (int o = 0; o < el.getChildNodes().getLength(); o++) {
 										sheet.autoSizeColumn(o);
-										HSSFCell cell = row.createCell(o);
+										Cell cell = row.createCell(o);
 										String valor = el.getElementsByTagName("column" + (o + 1)).item(0)
 												.getTextContent();
 
@@ -171,7 +186,6 @@ public class XmlToExcelConverter {
 				}
 			}
 		}
-		return nameSheet;
 	}
 
 }
